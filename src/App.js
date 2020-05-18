@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import { FlightList } from './components/flight-list/flight-list.component'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor() {
+    super()
+
+    this.state = {
+      arrivals: [],
+      departures: []
+  }
+}
+
+  componentDidMount() {
+    fetch('https://opensky-network.org/api/flights/departure?airport=EDDF&begin=1517227200&end=1517230800')
+    .then(response => response.json())
+    .then(departures => this.setState({ departures: departures }))
+
+    fetch('https://opensky-network.org/api/flights/arrival?airport=EDDF&begin=1517227200&end=1517230800')
+    .then(response => response.json())
+    .then(arrivals => this.setState({ arrivals: arrivals }))
+  }
+
+  render(){
+    return (
+      <div className="App">
+        <FlightList flights={this.state.arrivals} type='arrival' />
+        <FlightList flights={this.state.departures} type='departure' />
+      </div>
+    );
+  }
 }
 
 export default App;
+
