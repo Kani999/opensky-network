@@ -3,10 +3,7 @@ import './flight.style.css'
 
 export const Flight = (props) => {
     const isArrival = props.type
-    console.log(isArrival)
-
     const class_name = 'flight-container-' + isArrival
-    console.log(class_name)
 
       return(
         <div className={class_name}>

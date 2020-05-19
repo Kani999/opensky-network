@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import { FlightList } from './components/flight-list/flight-list.component'
+import { FlightSwitch } from './components/flight-switch/flight-switch.component'
 
 class App extends Component {
   constructor() {
@@ -8,25 +9,52 @@ class App extends Component {
 
     this.state = {
       arrivals: [],
-      departures: []
+      departures: [],
+      // arrival vs departure list - arrival default
+      selectedFlights: "arrival"
+    }
   }
-}
 
   componentDidMount() {
     fetch('https://opensky-network.org/api/flights/departure?airport=EDDF&begin=1517227200&end=1517230800')
-    .then(response => response.json())
-    .then(departures => this.setState({ departures: departures }))
+      .then(response => response.json())
+      .then(departures => this.setState({ departures: departures }))
 
+    // Load default flights as arrival
     fetch('https://opensky-network.org/api/flights/arrival?airport=EDDF&begin=1517227200&end=1517230800')
-    .then(response => response.json())
-    .then(arrivals => this.setState({ arrivals: arrivals }))
+      .then(response => response.json())
+      .then(arrivals => this.setState({ arrivals: arrivals }))
   }
 
-  render(){
+  // sets selectedFlights - Default arrival
+  handleOptionChange = changeEvent => {
+    const status = changeEvent.target.value
+
+    if (status === "arrival") {
+      this.setState({ selectedFlights: status });
+
+    } else if (status === "departure") {
+      this.setState({ selectedFlights: status });
+
+    } else { //default - different value selected
+      this.setState({ selectedFlights: "arrival" });
+    }
+  };
+
+  setFlights(type) {
+    const flights = (type === "arrival") ? this.state.arrivals : this.state.departures;
+    return flights
+  }
+
+  render() {
+    // arrival vs departure
+    const flightType = this.state.selectedFlights;
+    const flights = this.setFlights(flightType);
+
     return (
       <div className="App">
-        <FlightList flights={this.state.arrivals} type='arrival' />
-        <FlightList flights={this.state.departures} type='departure' />
+        <FlightSwitch handleOptionChange={this.handleOptionChange} flightType={flightType}></FlightSwitch>
+        <FlightList flights={flights} type={flightType} />
       </div>
     );
   }
