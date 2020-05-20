@@ -3,6 +3,8 @@ import './App.css';
 import { FlightList } from './components/flight-list/flight-list.component'
 import { FlightSwitch } from './components/flight-switch/flight-switch.component'
 import { FlightDate } from './components/flight-date/flight-date.component'
+import { trackPromise } from 'react-promise-tracker';
+
 
 class App extends Component {
   constructor() {
@@ -23,6 +25,9 @@ class App extends Component {
 
   // Fetch arrival and departure data
   fetchFlights(date) {
+    // clear current flight list so loading dots can be displayed
+    this.setState({arrivals: [], departures: []})
+
     let startDate = date
     // endDate = startDay + 1 days // max + days is 7 by API
     let endDate = new Date(startDate)
@@ -37,44 +42,50 @@ class App extends Component {
     console.log("StartUnix: " + startUnix + "\nEndUnix: " + endUnix);
 
     //arrivals
-    fetch(`https://opensky-network.org/api/flights/arrival?airport=LKMT&begin=${startUnix}&end=${endUnix}`)
-      .then(response => {
-        if (response.ok) {
-          console.log('status:' + response.status + ' ok: ' + response.ok)
-          return response.json()
-        } else {
-          console.log('status:' + response.status + ' ok: ' + response.ok)
-          return Promise.reject(`No arrivals are found for the given period.
+    trackPromise(
+      fetch(`https://opensky-network.org/api/flights/arrival?airport=LKMT&begin=${startUnix}&end=${endUnix}`)
+        .then(response => {
+          if (response.ok) {
+            console.log('status:' + response.status + ' ok: ' + response.ok)
+            return response.json()
+          } else {
+            console.log('status:' + response.status + ' ok: ' + response.ok)
+            return Promise.reject(`No arrivals are found for the given period.
                                  \n start: ${startDate}
                                  \n end: ${endDate}
                                  \n HTTP stats 404 - Not found is returned with an empty response body.`)
+          }
+        })
+        .then(data => this.setState({ arrivals: data }))
+        .catch(error => {
+          alert(error)
+          this.setState({ arrivals: [] })
         }
-      })
-      .then(data => this.setState({ arrivals: data }))
-      .catch(error => { alert(error)
-                        this.setState({arrivals: []})
-                      }
-            );
+        )
+    );
 
-    //departures
-    fetch(`https://opensky-network.org/api/flights/departure?airport=LKMT&begin=${startUnix}&end=${endUnix}`)
-      .then(response => {
-        if (response.ok) {
-          console.log('status:' + response.status + ' ok: ' + response.ok)
-          return response.json()
-        } else {
-          console.log('status:' + response.status + ' ok: ' + response.ok)
-          return Promise.reject(`No departures are found for the given period.
+    trackPromise(
+      //departures
+      fetch(`https://opensky-network.org/api/flights/departure?airport=LKMT&begin=${startUnix}&end=${endUnix}`)
+        .then(response => {
+          if (response.ok) {
+            console.log('status:' + response.status + ' ok: ' + response.ok)
+            return response.json()
+          } else {
+            console.log('status:' + response.status + ' ok: ' + response.ok)
+            return Promise.reject(`No departures are found for the given period.
                                  \n start: ${startDate}
                                  \n end: ${endDate}
                                  \n HTTP stats 404 - Not found is returned with an empty response body.`)
+          }
+        })
+        .then(data => this.setState({ departures: data }))
+        .catch(error => {
+          alert(error)
+          this.setState({ departures: [] })
         }
-      })
-      .then(data => this.setState({ departures: data }))
-      .catch(error => { alert(error)
-                        this.setState({departures: []})
-                      }
-            );
+        )
+    );
 
     // Set DateTime value
     this.setState({ startDate: date })
@@ -110,7 +121,7 @@ class App extends Component {
     return (
       <div className="App">
         <FlightSwitch handleOptionChange={this.flightTypeChanged} flightType={flightType}></FlightSwitch>
-        <FlightDate onChange={this.changeDate} date={this.state.startDate} />
+        <FlightDate onChange={this.changeFlightDate} date={this.state.startDate} />
         <FlightList flights={flights} type={flightType} />
       </div>
     );
