@@ -78,7 +78,17 @@ class App extends Component {
       this.setState({ flightType: local_flightType })
     }
 
-    this.fetchFlights(this.state.startDate)
+    const local_startDate = localStorage.getItem("startDate")
+    const s_date = new Date(local_startDate)
+
+    // if localStorage contains startDate and is valid
+    if (local_startDate !== null && !isNaN(s_date.getTime())) {
+      console.log("LocalStorage hit and valid: " + local_startDate)
+      this.fetchFlights(s_date)
+    }
+    else {
+      this.fetchFlights(this.state.startDate)
+    }
   }
 
   // sets flightType - Default arrival
@@ -98,6 +108,8 @@ class App extends Component {
 
   // Load new arrival/departure data based on selected date
   changeFlightDate(startDate) {
+    // Save date to localStorga
+    localStorage.setItem('startDate', startDate);
     this.fetchFlights(startDate)
   }
 
