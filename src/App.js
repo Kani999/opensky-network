@@ -70,12 +70,23 @@ class App extends Component {
 
   // Load flights data when page renders
   componentDidMount() {
+    const local_flightType = localStorage.getItem("flightType")
+
+    // if local flightType is set to arrival/departure 
+    if (local_flightType === 'arrival' || local_flightType === 'departure') {
+      console.log("LocalStorage hit and valid: " + local_flightType)
+      this.setState({ flightType: local_flightType })
+    }
+
     this.fetchFlights(this.state.startDate)
   }
 
   // sets flightType - Default arrival
   flightTypeChanged = changeEvent => {
     const status = changeEvent.target.value;
+
+    // Save flightType to localStorage
+    localStorage.setItem('flightType', status);
 
     (status === "departure") ? this.setState({ flightType: status }) : this.setState({ flightType: "arrival" })
   };
