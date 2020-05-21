@@ -3,6 +3,7 @@ import './App.css';
 import { FlightList } from './components/flight-list/flight-list.component'
 import { FlightSwitch } from './components/flight-switch/flight-switch.component'
 import { FlightDate } from './components/flight-date/flight-date.component'
+import { FlightSearch } from './components/flight-search/flight-search.component'
 import { trackPromise } from 'react-promise-tracker';
 
 // function callign fetch
@@ -17,13 +18,15 @@ class App extends Component {
       arrivals: [],
       departures: [],
       flightType: "arrival", // arrival vs departure list - arrival default
-      startDate: new Date(1517227200 * 1000) // 29.1.2018 13:00 // epoch miliseconds
+      startDate: new Date(1517227200 * 1000), // 29.1.2018 13:00 // epoch miliseconds
       // endDate = startDate + 1 days
+      searchCallSign: ''
     }
 
     this.changeFlightDate = this.changeFlightDate.bind(this)
     this.fetchFlights = this.fetchFlights.bind(this)
     this.setFlights = this.setFlights.bind(this)
+    this.searchCallSignFlights = this.searchCallSignFlights.bind(this)
   }
 
   // Fetch arrival and departure data
@@ -113,15 +116,35 @@ class App extends Component {
     this.fetchFlights(startDate)
   }
 
+  handleSearch = (e) => {
+    this.setState({ searchCallSign: e.target.value });
+  }
+
+  searchCallSignFlights(flights = [], match_string = '') {
+    if (flights.length > 0 && match_string !== '') {
+      // filter out flights where callsign is NULL
+      flights = flights.filter(f => f.callsign !== null);
+      // filter flights matching call sign in search box
+      return flights.filter(flight => flight.callsign.toLowerCase().includes(match_string.toLowerCase()))
+    }
+    return flights
+  }
+
   render() {
-    // arrival vs departure
-    const flightType = this.state.flightType;
-    const flights = this.setFlights(flightType);
+    const { flightType, searchCallSign } = this.state;
+    var flights = this.setFlights(flightType);
+
+    // filter flights based on Search box
+    flights = this.searchCallSignFlights(flights, searchCallSign)
 
     return (
       <div className="App">
         <FlightSwitch handleOptionChange={this.flightTypeChanged} flightType={flightType}></FlightSwitch>
         <FlightDate onChange={this.changeFlightDate} date={this.state.startDate} />
+        <FlightSearch
+          placeholder="Search Flights by callsign"
+          handleChange={this.handleSearch}
+        />
         <FlightList flights={flights} type={flightType} />
       </div>
     );
