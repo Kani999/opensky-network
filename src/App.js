@@ -5,6 +5,9 @@ import { FlightSwitch } from './components/flight-switch/flight-switch.component
 import { FlightDate } from './components/flight-date/flight-date.component'
 import { trackPromise } from 'react-promise-tracker';
 
+// function callign fetch
+import { fetchFlightsApi } from './api/flights.api'
+
 
 class App extends Component {
   constructor() {
@@ -14,7 +17,7 @@ class App extends Component {
       arrivals: [],
       departures: [],
       flightType: "arrival", // arrival vs departure list - arrival default
-      startDate: new Date(1517227200 * 1000) // 29.1.2018 13:00
+      startDate: new Date(1517227200 * 1000) // 29.1.2018 13:00 // epoch miliseconds
       // endDate = startDate + 1 days
     }
 
@@ -24,18 +27,18 @@ class App extends Component {
   }
 
   // Fetch arrival and departure data
-  fetchFlights(date) {
-    // clear current flight list so loading dots can be displayed
-    this.setState({arrivals: [], departures: []})
+  // * date - new Date(date)
+  fetchFlights(startDate) {
+    // clear current flight list
+    this.setState({ arrivals: [], departures: [] })
 
-    let startDate = date
     // endDate = startDay + 1 days // max + days is 7 by API
     let endDate = new Date(startDate)
     endDate = new Date(endDate.setDate(endDate.getDate() + 1))
 
     console.log("StartDate: " + startDate + "\nEndDate: " + endDate);
 
-    // Convert to unix epoch for api call
+    // Convert to unix epoch in SECONDS for api call
     var startUnix = startDate.getTime() / 1000;
     var endUnix = endDate.getTime() / 1000;
 
@@ -43,52 +46,26 @@ class App extends Component {
 
     //arrivals
     trackPromise(
-      fetch(`https://opensky-network.org/api/flights/arrival?airport=LKMT&begin=${startUnix}&end=${endUnix}`)
-        .then(response => {
-          if (response.ok) {
-            console.log('status:' + response.status + ' ok: ' + response.ok)
-            return response.json()
-          } else {
-            console.log('status:' + response.status + ' ok: ' + response.ok)
-            return Promise.reject(`No arrivals are found for the given period.
-                                 \n start: ${startDate}
-                                 \n end: ${endDate}
-                                 \n HTTP stats 404 - Not found is returned with an empty response body.`)
-          }
-        })
-        .then(data => this.setState({ arrivals: data }))
+      fetchFlightsApi(startUnix, endUnix, 'arrival')
+        .then(response => this.setState({ arrivals: response }))
         .catch(error => {
-          alert(error)
+          alert("Error:   " + error)
           this.setState({ arrivals: [] })
         }
         )
-    );
+    )
 
     trackPromise(
-      //departures
-      fetch(`https://opensky-network.org/api/flights/departure?airport=LKMT&begin=${startUnix}&end=${endUnix}`)
-        .then(response => {
-          if (response.ok) {
-            console.log('status:' + response.status + ' ok: ' + response.ok)
-            return response.json()
-          } else {
-            console.log('status:' + response.status + ' ok: ' + response.ok)
-            return Promise.reject(`No departures are found for the given period.
-                                 \n start: ${startDate}
-                                 \n end: ${endDate}
-                                 \n HTTP stats 404 - Not found is returned with an empty response body.`)
-          }
-        })
-        .then(data => this.setState({ departures: data }))
+      fetchFlightsApi(startUnix, endUnix, 'departure')
+        .then(response => this.setState({ departures: response }))
         .catch(error => {
-          alert(error)
+          alert("Error:   " + error)
           this.setState({ departures: [] })
         }
         )
-    );
-
+    )
     // Set DateTime value
-    this.setState({ startDate: date })
+    this.setState({ startDate: startDate })
   }
 
   // Load flights data when page renders
