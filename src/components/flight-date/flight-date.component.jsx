@@ -1,7 +1,12 @@
 import React from 'react';
 import DatePicker from 'react-date-picker'
-//import DatePicker from 'react-date-picker/dist/entry.nostyle';
+import PropTypes from 'prop-types';
 import './flight-date.style.css'
+
+const propTypes = {
+    date: PropTypes.instanceOf(Date).isRequired,
+    onChange: PropTypes.func.isRequired
+}
 
 export const FlightDate = (props) => {
     return (
@@ -15,3 +20,5 @@ export const FlightDate = (props) => {
         </div>
     )
 }
+
+FlightDate.propTypes = propTypes;

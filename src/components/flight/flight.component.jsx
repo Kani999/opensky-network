@@ -1,26 +1,44 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 import '../flight-list/flight-list.style.scss'
 
-export const Flight = (props) => {
-      return(
-        <div className="flex-table row" role="rowgroup">
-            <div className="flex-row" role="cell"> {props.flight.icao24}</div>
-            <div className="flex-row" role="cell">{Unix_timestamp(props.flight.firstSeen)} </div>
-            <div className="flex-row" role="cell">{props.flight.estDepartureAirport} </div>
-            <div className="flex-row" role="cell">{Unix_timestamp(props.flight.lastSeen) } </div>
-            <div className="flex-row" role="cell">{props.flight.estArrivalAirport} </div>
-            <div className="flex-row" role="cell">{props.flight.callsign} </div>
-        </div>
-      )
+const propTypes = {
+  flight: PropTypes.shape({
+    icao24: PropTypes.string,
+    // seconds since epcoch
+    firstSeen: PropTypes.number,
+    estDepartureAirport: PropTypes.string,
+    // seconds since epcoch
+    lastSeen: PropTypes.number,
+    estArrivalAirport: PropTypes.string,
+    callsign: PropTypes.string
+  })
 }
 
-function Unix_timestamp(t) {
-    var dt = new Date(t * 1000);
-    var hr = dt.getHours();
-    var m = "0" + dt.getMinutes();
-    var s = "0" + dt.getSeconds();
-    return hr + ':' + m.substr(-2) + ':' + s.substr(-2);
+export const Flight = (props) => {
+  return (
+    <div className="flex-table row" role="rowgroup">
+      <div className="flex-row" role="cell"> {props.flight.icao24}</div>
+      <div className="flex-row" role="cell">{Unix_timestamp(props.flight.firstSeen)} </div>
+      <div className="flex-row" role="cell">{props.flight.estDepartureAirport} </div>
+      <div className="flex-row" role="cell">{Unix_timestamp(props.flight.lastSeen)} </div>
+      <div className="flex-row" role="cell">{props.flight.estArrivalAirport} </div>
+      <div className="flex-row" role="cell">{props.flight.callsign} </div>
+    </div>
+  )
 }
+
+// t = seconds since epcoch
+function Unix_timestamp(t) {
+  var dt = new Date(t * 1000);
+  var hr = dt.getHours();
+  var m = "0" + dt.getMinutes();
+  var s = "0" + dt.getSeconds();
+  return hr +
+    ':' + m.substr(-2) + ':' + s.substr(-2);
+}
+
+Flight.propTypes = propTypes;
 
 /*
 

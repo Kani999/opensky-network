@@ -9,7 +9,6 @@ import { trackPromise } from 'react-promise-tracker';
 // function callign fetch
 import { fetchFlightsApi } from './api/flights.api'
 
-
 class App extends Component {
   constructor() {
     super()
@@ -155,10 +154,11 @@ class App extends Component {
             <FlightSearch
               placeholder="Enter Call Sign"
               handleChange={this.handleSearch}
+              value={this.state.searchCallSign}
             />
           </div>
         </div>
-        <FlightList flights={flights} type={flightType} />
+        <FlightList flights={flights} type={flightType}/>
       </div>
     );
   }

@@ -1,5 +1,13 @@
 import React from 'react'
 import './flight-switch.style.css'
+import PropTypes from 'prop-types';
+
+
+const propTypes = {
+    flightType: PropTypes.oneOf(['arrival', 'departure']).isRequired,
+    handleOptionChange: PropTypes.func.isRequired
+}
+
 
 export const FlightSwitch = (props) => (
     <div className="flight-switcher">
@@ -26,3 +34,5 @@ export const FlightSwitch = (props) => (
         </label>
     </div>
 );
+
+FlightSwitch.propTypes = propTypes;

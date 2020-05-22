@@ -1,6 +1,12 @@
 import React from 'react'
 import './flight-list.style.scss'
 import { Flight } from '../flight/flight.component'
+import PropTypes from 'prop-types';
+
+const propTypes = {
+  type: PropTypes.oneOf(['arrival', 'departure']).isRequired,
+}
+
 
 export const FlightList = (props) => {
   console.log(props)
@@ -8,7 +14,7 @@ export const FlightList = (props) => {
   return (
     <div>
       <div className='flight-type'>{props.type.toUpperCase()}</div>
-      
+
       <div className="table-container">
         <div className="flex-table">
           <div className="flex-row">ICAO</div>
@@ -20,9 +26,11 @@ export const FlightList = (props) => {
         </div>
 
         {props.flights.map((flight, index) => (
-          <Flight key={index} flight={flight} type={props.type} />
+          <Flight key={index} flight={flight} />
         ))}
       </div>
     </div>
   )
 }
+
+FlightList.propTypes = propTypes;
