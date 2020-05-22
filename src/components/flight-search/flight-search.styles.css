@@ -1,14 +1,25 @@
-.search {
-  -webkit-appearance: none;
-  border: none;
-  padding: 3px;
-  width: 200px;
-  background-color: #4293e4;
+/* Style the input container */
+.search-container {
+  display: flex;
+  width: 100%;
+}
+
+/* Style the form icons */
+.icon {
+  padding: 10px;
+  background: dodgerblue;
   color: white;
+  min-width: 50px;
   text-align: center;
 }
 
-.search::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: whitesmoke;
-  opacity: 1; /* Firefox */
+/* Style the input fields */
+.input-field {
+  width: 100%;
+  padding: 10px;
+  outline: none;
+}
+
+.input-field:focus {
+  border: 2px solid dodgerblue;
 }

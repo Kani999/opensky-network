@@ -16,14 +16,13 @@ export const FlightSearch = ({ placeholder, handleChange, value }) => {
 
     return (
         <div className="search-container">
-            <button disabled={true}>{search_icon}</button>
-
-            <input className='search'
+            <input className='input-field'
                 type='search'
                 placeholder={placeholder}
                 onChange={handleChange}
-                value={value}
-            />
+                value={value} >
+                </input>
+            <i className="icon">{search_icon}</i>
         </div>
     )
 }
