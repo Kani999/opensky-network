@@ -4,8 +4,8 @@ import { FlightList } from './components/flight-list/flight-list.component'
 import { FlightSwitch } from './components/flight-switch/flight-switch.component'
 import { FlightDate } from './components/flight-date/flight-date.component'
 import { FlightSearch } from './components/flight-search/flight-search.component'
+import ErrorBoundary from './components/error-boundary.component'
 import { trackPromise } from 'react-promise-tracker';
-
 // function callign fetch
 import { fetchFlightsApi } from './api/flights.api'
 
@@ -145,20 +145,28 @@ class App extends Component {
       <div className="App">
         <div className="flex-grid">
           <div className="col">
-            <FlightSwitch handleOptionChange={this.flightTypeChanged} flightType={flightType}></FlightSwitch>
+            <ErrorBoundary>
+              <FlightSwitch handleOptionChange={this.flightTypeChanged} flightType={flightType}></FlightSwitch>
+            </ErrorBoundary>
           </div>
           <div className="col">
-            <FlightDate onChange={this.changeFlightDate} date={this.state.startDate} />
+            <ErrorBoundary>
+              <FlightDate onChange={this.changeFlightDate} date={this.state.startDate} />
+            </ErrorBoundary>
           </div>
           <div className="col">
-            <FlightSearch
-              placeholder="Enter Call Sign"
-              handleChange={this.handleSearch}
-              value={this.state.searchCallSign}
-            />
+            <ErrorBoundary>
+              <FlightSearch
+                placeholder="Enter Call Sign"
+                handleChange={this.handleSearch}
+                value={this.state.searchCallSign}
+              />
+            </ErrorBoundary>
           </div>
         </div>
-        <FlightList flights={flights} type={flightType}/>
+        <ErrorBoundary>
+          <FlightList flights={flights} type={flightType} />
+        </ErrorBoundary>
       </div>
     );
   }
