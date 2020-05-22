@@ -1,18 +1,15 @@
 import React from 'react'
-import './flight.style.css'
+import '../flight-list/flight-list.style.scss'
 
 export const Flight = (props) => {
-    const isArrival = props.type
-    const class_name = 'flight-container-' + isArrival
-
       return(
-        <div className={class_name}>
-            <p> {props.flight.icao24} </p>
-            <p> { Unix_timestamp(props.flight.firstSeen) } </p>
-            <p> {props.flight.estDepartureAirport} </p>
-            <p> { Unix_timestamp(props.flight.lastSeen) } </p>
-            <p> {props.flight.estArrivalAirport} </p>
-            <p> {props.flight.callsign} </p>
+        <div className="flex-table row" role="rowgroup">
+            <div className="flex-row" role="cell"> {props.flight.icao24}</div>
+            <div className="flex-row" role="cell">{Unix_timestamp(props.flight.firstSeen)} </div>
+            <div className="flex-row" role="cell">{props.flight.estDepartureAirport} </div>
+            <div className="flex-row" role="cell">{Unix_timestamp(props.flight.lastSeen) } </div>
+            <div className="flex-row" role="cell">{props.flight.estArrivalAirport} </div>
+            <div className="flex-row" role="cell">{props.flight.callsign} </div>
         </div>
       )
 }

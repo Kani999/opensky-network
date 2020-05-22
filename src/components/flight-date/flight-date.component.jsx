@@ -1,12 +1,16 @@
 import React from 'react';
-import DateTimePicker from 'react-datetime-picker'
+import DatePicker from 'react-date-picker'
+//import DatePicker from 'react-date-picker/dist/entry.nostyle';
+import './flight-date.style.css'
 
 export const FlightDate = (props) => {
     return (
         <div>
-            <DateTimePicker
+            <DatePicker
                 onChange={props.onChange}
                 value={props.date}
+                required={true}
+                clearIcon={null}
             />
         </div>
     )

@@ -1,29 +1,28 @@
 import React from 'react'
+import './flight-switch.style.css'
 
 export const FlightSwitch = (props) => (
-    <div className="flight-switch">
-        <div className="form-check">
-            <label>
-                <input type="radio" 
-                       name="react-tips" 
-                       value="arrival"
-                       checked={props.flightType === "arrival"} 
-                       onChange={props.handleOptionChange} 
-                       className="form-check-input" />
+    <div className="flight-switcher">
+        <label className="flight-switch">
+            <input type="radio"
+                name="fswitch"
+                value="arrival"
+                checked={props.flightType === "arrival"}
+                onChange={props.handleOptionChange}
+            />
               Arrival
-            </label>
-        </div>
+              <span className="checkmark"></span>
+        </label>
 
-        <div className="form-check">
-            <label>
-                <input type="radio" 
-                       name="react-tips" 
-                       value="departure" 
-                       checked={props.flightType === "departure"} 
-                       onChange={props.handleOptionChange} 
-                       className="form-check-input" />
+        <label className="flight-switch">
+            <input type="radio"
+                name="fswitch"
+                value="departure"
+                checked={props.flightType === "departure"}
+                onChange={props.handleOptionChange}
+            />
               Departure
-            </label>
-        </div>
+              <span className="checkmark"></span>
+        </label>
     </div>
 );

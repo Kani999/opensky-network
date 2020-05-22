@@ -1,9 +1,14 @@
 .search {
   -webkit-appearance: none;
   border: none;
-  outline: none;
-  padding: 10px;
-  width: 150px;
-  line-height: 30px;
-  margin-bottom: 30px;
+  padding: 3px;
+  width: 200px;
+  background-color: #4293e4;
+  color: white;
+  text-align: center;
+}
+
+.search::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: whitesmoke;
+  opacity: 1; /* Firefox */
 }

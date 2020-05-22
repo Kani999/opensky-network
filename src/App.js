@@ -33,7 +33,7 @@ class App extends Component {
   // * date - new Date(date)
   fetchFlights(startDate) {
     // clear current flight list
-    this.setState({ arrivals: [], departures: [] })
+    this.setState({ arrivals: [], departures: [], startDate: startDate })
 
     // endDate = startDay + 1 days // max + days is 7 by API
     let endDate = new Date(startDate)
@@ -67,8 +67,6 @@ class App extends Component {
         }
         )
     )
-    // Set DateTime value
-    this.setState({ startDate: startDate })
   }
 
   // Load flights data when page renders
@@ -113,7 +111,14 @@ class App extends Component {
   changeFlightDate(startDate) {
     // Save date to localStorga
     localStorage.setItem('startDate', startDate);
-    this.fetchFlights(startDate)
+
+    //check date validity otherwise set default
+    var date = new Date(startDate)
+    if (isNaN(date.getTime())) {
+      date = new Date()
+    }
+
+    this.fetchFlights(date)
   }
 
   handleSearch = (e) => {
@@ -139,12 +144,20 @@ class App extends Component {
 
     return (
       <div className="App">
-        <FlightSwitch handleOptionChange={this.flightTypeChanged} flightType={flightType}></FlightSwitch>
-        <FlightDate onChange={this.changeFlightDate} date={this.state.startDate} />
-        <FlightSearch
-          placeholder="Search Flights by callsign"
-          handleChange={this.handleSearch}
-        />
+        <div className="flex-grid">
+          <div className="col">
+            <FlightSwitch handleOptionChange={this.flightTypeChanged} flightType={flightType}></FlightSwitch>
+          </div>
+          <div className="col">
+            <FlightDate onChange={this.changeFlightDate} date={this.state.startDate} />
+          </div>
+          <div className="col">
+            <FlightSearch
+              placeholder="Enter Call Sign"
+              handleChange={this.handleSearch}
+            />
+          </div>
+        </div>
         <FlightList flights={flights} type={flightType} />
       </div>
     );
