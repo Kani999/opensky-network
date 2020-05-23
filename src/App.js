@@ -86,6 +86,18 @@ class App extends Component {
     else {
       this.fetchFlights(this.state.startDate)
     }
+
+    // switch between arrival/departure every 30 seconds
+    this.interval = setInterval(() => {
+      const new_type = this.state.flightType === 'arrival' ? 'departure' : 'arrival'
+      this.setState({ flightType: new_type })
+    }, 30000);
+
+  }
+
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   // sets flightType - Default arrival
