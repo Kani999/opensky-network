@@ -77,7 +77,7 @@ class App extends Component {
     endDate = new Date(endDate.setDate(endDate.getDate() + 1))
 
     // Convert to unix epoch in SECONDS for api call
-    var startUnix = this.state.startDate.getTime() / 1000;
+    var startUnix = startDate.getTime() / 1000;
     var endUnix = endDate.getTime() / 1000;
 
     //HOC

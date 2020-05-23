@@ -13,7 +13,7 @@ export const FlightList = (props) => {
   let [flights, setFlights] = useState(props.flights)
 
   useEffect(() => {
-    var flightArr = props.flights
+    var flightArr = props.flights || []
 
     setFlights(flightArr)
 

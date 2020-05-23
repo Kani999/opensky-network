@@ -1,0 +1,5 @@
+.fetch-error {
+  display: grid;
+  background: #d25656;
+  color: white;
+}

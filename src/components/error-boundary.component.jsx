@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import './error-boundary.style.css'
+
 
 class ErrorBoundary extends Component {
     constructor(props) {
@@ -12,13 +14,13 @@ class ErrorBoundary extends Component {
 
     componentDidCatch(error, errorInfo) {
         // log the error to console
-        alert(error, errorInfo);
+        console.log(error + ' ' + errorInfo);
     }
 
     render() {
         if (this.state.hasError) {
             // You can render any custom fallback UI
-            return <p>Something went wrong.</p>;
+            return <div className="error"><p>Something went wrong.</p></div>;
         }
 
         return this.props.children;

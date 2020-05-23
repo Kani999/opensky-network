@@ -1,5 +1,6 @@
 import React from "react";
 import { trackPromise } from 'react-promise-tracker';
+import './flight-data.style.css'
 
 function flightData(WrappedComponent, startUnix, endUnix, type = 'arrival', airport = 'LKMT') {
     const url = `https://opensky-network.org/api/flights/${type}?airport=${airport}&begin=${startUnix}&end=${endUnix}`
@@ -45,7 +46,7 @@ function flightData(WrappedComponent, startUnix, endUnix, type = 'arrival', airp
 
         render() {
             const { data, error } = this.state;
-            if (error) return <div>Data could not be fetched! Try again later.</div>;
+            if (error) return <div className="fetch-error"><p>Data could not be fetched! Try again later.</p></div>
             return <WrappedComponent flights={data} type={type} {...this.props} />;
         };
     }
