@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './flight-list.style.scss'
 import { Flight } from '../flight/flight.component'
 import { FlightSearch } from '../flight-search/flight-search.component'
@@ -10,18 +10,26 @@ const propTypes = {
 
 export const FlightList = (props) => {
   const [searchCallSign, setSearchCallSign] = useState('');
+  let [flights, setFlights] = useState(props.flights)
 
-  console.log(searchCallSign)
-  // filter flights based on Search box
-  var flights = props.flights
-  flights = searchCallSignFlights(flights, searchCallSign)
+  useEffect(() => {
+    var flightArr = props.flights
 
-  console.log(props)
+    setFlights(flightArr)
+
+    if (flightArr.length > 0 && searchCallSign !== '') {
+      // filter out flights where callsign is NULL
+      flightArr = flightArr.filter(f => f.callsign !== null);
+      // filter flights matching call sign in search box
+      flightArr = flightArr.filter(flight => flight.callsign.toLowerCase().includes(searchCallSign.toLowerCase()))
+      setFlights(flightArr)
+    }
+  }, [props, searchCallSign])
+
 
   return (
     <div>
       <div className='flight-type'>{props.type.toUpperCase()}</div>
-
       <div className="table-container">
         <div className="flex-table">
           <div className="flex-row"><p>ICAO</p></div>
@@ -37,24 +45,13 @@ export const FlightList = (props) => {
             />
           </div>
         </div>
-
         {flights.map((flight, index) => (
           <Flight key={index} flight={flight} />
         ))}
+
       </div>
     </div>
   )
 }
 
 FlightList.propTypes = propTypes;
-
-// Search for flights with given call sign string
-function searchCallSignFlights(flights = [], match_string = '') {
-  if (flights.length > 0 && match_string !== '') {
-    // filter out flights where callsign is NULL
-    flights = flights.filter(f => f.callsign !== null);
-    // filter flights matching call sign in search box
-    return flights.filter(flight => flight.callsign.toLowerCase().includes(match_string.toLowerCase()))
-  }
-  return flights
-}
