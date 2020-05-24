@@ -15,7 +15,7 @@ export const FlightDate = (props) => {
                 onChange={props.onChange}
                 value={props.date}
                 required={true}
-                clearIcon={null}
+                dateFormat="dd/MM/yyyy"
             />
         </div>
     )

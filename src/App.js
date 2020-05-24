@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import moment from 'moment'
 
 import { FlightList } from './components/flight-list/flight-list.component'
 import { FlightSwitch } from './components/flight-switch/flight-switch.component'
@@ -15,7 +16,7 @@ class App extends Component {
 
     this.state = {
       flightType: "arrival", // arrival vs departure list - arrival default
-      startDate: new Date(), // endDate = startDate + 1 days
+      startDate: moment(), // endDate = startDate + 1 days
     }
 
     this.changeFlightDate = this.changeFlightDate.bind(this)
@@ -30,9 +31,9 @@ class App extends Component {
 
     // get startDate from localStorage and check if its valid
     const local_startDate = localStorage.getItem("startDate")
-    const s_date = new Date(local_startDate)
+    const s_date = moment(local_startDate)
 
-    if (local_startDate !== null && !isNaN(s_date.getTime())) {
+    if (local_startDate !== null && s_date.isValid()) {
       this.setState({ startDate: s_date })
     }
 
@@ -61,10 +62,10 @@ class App extends Component {
   changeFlightDate(startDate) {
     // Save date to localStorga and check date validity otherwise set default
     localStorage.setItem('startDate', startDate);
-    var date = new Date(startDate)
+    var date = moment(startDate)
 
-    if (isNaN(date.getTime())) {
-      date = new Date()
+    if (!date.isValid()) {
+      date = moment()
     }
 
     this.setState({ startDate: date })
@@ -73,12 +74,11 @@ class App extends Component {
   // Fetch arrival or departure data and return HOC component
   fetchFlightsComponent(startDate, flightType) {
     // start date plus 1 day
-    let endDate = new Date(startDate)
-    endDate = new Date(endDate.setDate(endDate.getDate() + 1))
+    let endDate = moment(startDate).add(1, 'days')
 
     // Convert to unix epoch in SECONDS for api call
-    var startUnix = startDate.getTime() / 1000;
-    var endUnix = endDate.getTime() / 1000;
+    var startUnix = startDate.unix();
+    var endUnix = endDate.unix();
 
     //HOC
     return flightData(FlightList, startUnix, endUnix, returnFlightStatus(flightType))
@@ -99,7 +99,7 @@ class App extends Component {
           </div>
           <div className="col">
             <ErrorBoundary>
-              <FlightDate onChange={this.changeFlightDate} date={startDate} />
+              <FlightDate onChange={this.changeFlightDate} date={startDate.toDate()} />
             </ErrorBoundary>
           </div>
           <div className="col">
